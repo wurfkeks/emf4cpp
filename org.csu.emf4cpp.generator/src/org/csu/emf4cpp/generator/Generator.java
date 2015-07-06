@@ -13,8 +13,6 @@ import org.apache.commons.cli.ParseException;
 import org.csu.cpp.output.CppBeautifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -25,7 +23,6 @@ import org.eclipse.xpand2.XpandFacade;
 import org.eclipse.xpand2.output.Outlet;
 import org.eclipse.xpand2.output.OutputImpl;
 import org.eclipse.xtend.expression.Variable;
-import org.eclipse.xtend.typesystem.emf.EmfRegistryMetaModel;
 
 public class Generator {
     private static String templatePath = "template::Main::main";
@@ -82,7 +79,8 @@ public class Generator {
     }
 
     // Main
-    public static void main(String[] args) {
+    @SuppressWarnings("unchecked")
+	public static void main(String[] args) {
         String filePath = null;
         String targetDir = System.getProperty("user.dir");
         String prSrcPaths = "";

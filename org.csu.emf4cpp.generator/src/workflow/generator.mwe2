@@ -16,7 +16,7 @@ Workflow {
 	
 	component = org.eclipse.xpand2.Generator {
 		expand = "template::Main::main FOR model"
-		
+		fileEncoding = fileEncoding
 		metaModel = org.eclipse.xtend.type.impl.java.JavaBeansMetaModel {}
 		outlet = {
 			path = targetDir
@@ -28,7 +28,6 @@ Workflow {
 			path = targetDir
 			postprocessor = org.csu.cpp.output.CppBeautifier {}
 		}
-		fileEncoding = fileEncoding
 
 		// Regiones protegidas
 		prSrcPaths = "${targetDir}"
