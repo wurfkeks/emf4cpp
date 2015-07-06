@@ -179,7 +179,11 @@ void «name»::eSet ( ::ecore::EInt _featureID, ::ecore::EJavaObject const& _new
             return «ef.getMemberName()».size();
                 «ELSE-»
                     «IF ef.defaultValueLiteral != null -»
+                    	«IF EEnum.isInstance(ef.EType) -»
+			return «ef.getMemberName()» != «ef.EType.name»::«ef.defaultValueLiteral»;
+						«ELSE-»
             return «ef.getMemberName()» != «ef.defaultValueLiteral»;
+            			«ENDIF-»
                     «ELSE-»
             return ::ecorecpp::mapping::set_traits< ::«ef.EType.getFQN()» >::is_set(«ef.getMemberName()»);
                     «ENDIF-»

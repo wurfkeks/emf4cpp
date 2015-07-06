@@ -55,6 +55,7 @@ include(CPack)
 set(CMAKE_CXX_FLAGS "")
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -g -DDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O3 -funroll-loops")
+set(CMAKE_CXX_STANDARD 11)
 
 set(«fqn»_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/«getFQN("/")».cpp

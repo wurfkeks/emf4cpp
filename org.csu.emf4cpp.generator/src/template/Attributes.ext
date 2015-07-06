@@ -74,11 +74,18 @@ String getDeleteAtCPPSignature(EAttribute this) :
 	getDeleteAtCPPSignature("");
 
 // Default value
+String getDefaultValueLiteral(EAttribute this) :
+	if EEnum.isInstance(this.EType) then
+		this.EType.name + "::" + defaultValueLiteral
+	else 
+		defaultValueLiteral
+;
+
 String getDefaultValue(EAttribute this) :
 	if defaultValueLiteral != null then
-		getAttrMemberName() + "(" + defaultValueLiteral+ ")"
+		getAttrMemberName() + "(" + getDefaultValueLiteral() + ")"
 	else
-		getAttrMemberName() + "()" 
+		getAttrMemberName() + "()"
 ;
 
 String getDefaultValue(EReference this) :

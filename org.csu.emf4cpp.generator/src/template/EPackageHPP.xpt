@@ -81,12 +81,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 «EXPAND template::EClassHPP::namespaces_begin FOR this»
 
 // EDataType
-«FOREACH EClassifiers.typeSelect(EDataType).select(e|e.ETypeParameters.isEmpty) AS type-»
+«FOREACH EClassifiers.typeSelect(EDataType).select(e|e.ETypeParameters.isEmpty).reject(e|EEnum.isInstance(e)) AS type-»
 «PROTECT CSTART '/*' CEND '*/' ID type.getFQN("_") DISABLE»
 // Please, enable the protected region if you add manually written code.
 // To do this, add the keyword ENABLED before START.
 typedef «getEDataTypeMap(type)» «type.name»;
 «ENDPROTECT»
+«ENDFOREACH»
+
+// EEnum
+«FOREACH EClassifiers.typeSelect(EEnum) AS enum»
+// «enum.name»
+enum class «enum.name» {
+	«FOREACH enum.ELiterals AS literal»
+	«literal.name» = «literal.value»,
+	«ENDFOREACH»
+};
 «ENDFOREACH»
 
 // EClass
