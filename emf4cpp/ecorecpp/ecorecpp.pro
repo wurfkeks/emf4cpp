@@ -2,18 +2,19 @@ TEMPLATE = lib
 TARGET = emf4cpp-ecorecpp
 
 CONFIG += \
-    console \
     shared
 
 CONFIG -= \
     app_bundle \
     qt
 
+include(../emf4cpp.pri)
+
 INCLUDEPATH += \
     $$PWD/..
 
 LIBS += \
-    -L$$PWD/../../build-emf4cpp-Desktop_Qt_5_5_0_MinGW_32bit-Release/ecore/release \
+    -L$$DESTDIR \
     -lemf4cpp-ecore
 
 HEADERS += \

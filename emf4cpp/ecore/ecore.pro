@@ -10,6 +10,8 @@ CONFIG -= \
     app_bundle \
     qt
 
+include(../emf4cpp.pri)
+
 INCLUDEPATH += \
     $$PWD/..
 
