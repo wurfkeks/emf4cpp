@@ -6,3 +6,4 @@ plugin.properties
 build.xml
 jar-in-jar-loader.zip
 org.csu.emf4cpp.generator_1.0.0.jar
+*.user
