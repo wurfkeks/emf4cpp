@@ -8,6 +8,9 @@ CONFIG -= \
     app_bundle \
     qt
 
+DEFINES += \
+    DEBUG
+
 include(../emf4cpp.pri)
 
 INCLUDEPATH += \

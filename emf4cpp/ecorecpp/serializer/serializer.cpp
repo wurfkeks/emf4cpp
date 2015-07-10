@@ -21,6 +21,7 @@
 #include <ecore.hpp>
 #include "../util/debug.hpp"
 #include "../mapping.hpp"
+#include <exception>
 
 using namespace ::ecorecpp::serializer;
 using namespace ::ecore;
@@ -60,6 +61,7 @@ void serializer::serialize_node(EObject_ptr obj)
 #endif
 
     EClass_ptr cl = obj->eClass();
+    DEBUG_MSG(cout, indent << "Object: " << cl->getName());
 
     /**
      *
@@ -78,7 +80,7 @@ void serializer::serialize_node(EObject_ptr obj)
             EAttribute_ptr const& current_at = attributes[i];
             EClassifier_ptr at_classifier = current_at->getEType();
 
-            DEBUG_MSG(cout, indent << current_at->getName());
+            DEBUG_MSG(cout, indent << "Attribute: " << current_at->getName());
 
             if (!current_at->isTransient() && obj->eIsSet(current_at))
             {
@@ -94,8 +96,7 @@ void serializer::serialize_node(EObject_ptr obj)
                         ::ecorecpp::mapping::type_traits::string_t value =
                                 fac->convertToString(atc, any);
 
-                        DEBUG_MSG(cout, indent << current_at->getName() << " "
-                                << value);
+                        DEBUG_MSG(cout, indent << "\tValue: " << value);
 
                         if (!value.empty() && value
                                 != current_at->getDefaultValueLiteral())
@@ -109,9 +110,9 @@ void serializer::serialize_node(EObject_ptr obj)
                     // TODO: possible?
                 }
             }
-        } catch (...)
+        } catch (std::exception& e)
         {
-            DEBUG_MSG(cerr, "exception catched!");
+            DEBUG_MSG(cerr, "exception catched: " << e.what());
         }
     }
 
@@ -124,7 +125,7 @@ void serializer::serialize_node(EObject_ptr obj)
         {
             EReference_ptr current_ref = references[i];
 
-            DEBUG_MSG(cout, indent << current_ref->getName());
+            DEBUG_MSG(cout, indent << "Reference: " << current_ref->getName());
 
             if (!current_ref->isTransient() && obj->eIsSet(current_ref))
             {
@@ -134,7 +135,7 @@ void serializer::serialize_node(EObject_ptr obj)
                 {
                     // TODO: create reference
                     ::ecorecpp::mapping::type_traits::stringstream_t value;
-                    DEBUG_MSG(cout, indent << current_ref->getName());
+//                    DEBUG_MSG(cout, indent << current_ref->getName());
 
                     if (current_ref->getUpperBound() != 1)
                     {
@@ -160,9 +161,9 @@ void serializer::serialize_node(EObject_ptr obj)
                         m_ser.add_attribute(current_ref->getName(), value.str());
                 }
             }
-        } catch (...)
+        } catch (std::exception& e)
         {
-            DEBUG_MSG(cerr, "exception catched! ");
+            DEBUG_MSG(cerr, "exception catched: " << e.what());
         }
     }
 
@@ -180,7 +181,7 @@ void serializer::serialize_node(EObject_ptr obj)
             EAttribute_ptr const& current_at = attributes[i];
             EClassifier_ptr at_classifier = current_at->getEType();
 
-            DEBUG_MSG(cout, indent << current_at->getName());
+            DEBUG_MSG(cout, indent << "Attribute: " << current_at->getName());
 
             if (!current_at->isTransient() && obj->eIsSet(current_at))
             {
@@ -201,8 +202,7 @@ void serializer::serialize_node(EObject_ptr obj)
                             ::ecorecpp::mapping::type_traits::string_t value =
                                     fac->convertToString(atc, anys[k]);
 
-                            DEBUG_MSG(cout, indent << current_at->getName()
-                                    << " " << value);
+                            DEBUG_MSG(cout, indent << "\tValue: " << value);
 
                             m_ser.open_object(current_at->getName());
                             m_ser.add_value(value);
@@ -215,9 +215,9 @@ void serializer::serialize_node(EObject_ptr obj)
                     // TODO: possible?
                 }
             }
-        } catch (...)
+        } catch (std::exception& e)
         {
-            DEBUG_MSG(cerr, "exception catched!");
+            DEBUG_MSG(cerr, "exception catched: " << e.what());
         }
     }
 
@@ -227,7 +227,7 @@ void serializer::serialize_node(EObject_ptr obj)
         {
             EReference_ptr current_ref = references[i];
 
-            DEBUG_MSG(cout, indent << current_ref->getName());
+            DEBUG_MSG(cout, indent << "Reference: " << current_ref->getName());
 
             if (!current_ref->isTransient() && obj->eIsSet(current_ref))
             {
@@ -235,15 +235,21 @@ void serializer::serialize_node(EObject_ptr obj)
 
                 if (current_ref->isContainment())
                 {
-                    DEBUG_MSG(cout, indent << current_ref->getName());
+//                    DEBUG_MSG(cout, indent << current_ref->getName());
 
                     if (current_ref->getUpperBound() != 1)
                     {
-                        mapping::EList_ptr children = ecorecpp::mapping::any::any_cast<
-                                mapping::EList_ptr >(any);
-                        for (size_t j = 0; j < children->size(); j++)
+                        try {
+                            mapping::EList_ptr children =
+                                    ecorecpp::mapping::any::any_cast<mapping::EList_ptr >(any);
+                            for (size_t j = 0; j < children->size(); j++)
+                            {
+                                create_node(obj, (*children)[j], current_ref);
+                            }
+                        } catch (std::exception& e)
                         {
-                            create_node(obj, (*children)[j], current_ref);
+                            DEBUG_MSG(cerr, "exception catched: " << e.what());
+                            DEBUG_MSG(cerr, "while working on object of type " << get_type(obj));
                         }
                     }
                     else
@@ -254,9 +260,9 @@ void serializer::serialize_node(EObject_ptr obj)
                     }
                 }
             }
-        } catch (...)
+        } catch (std::exception& e)
         {
-            DEBUG_MSG(cerr, "exception catched! ");
+            DEBUG_MSG(cerr, "exception catched: " << e.what());
         }
     }
 
